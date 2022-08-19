@@ -1,0 +1,44 @@
+version: "3"
+services:
+  
+  api:
+   build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+   ports:
+     - ${API_SERVER_PORT}:3030
+   container_name: todolist-api
+   environment:
+      API_URL: ${API_URL}
+   networks:
+     - todolist-net
+   volumes:
+    - ./api/src:/usr/app/src
+   depends_on:
+    - db
+
+  db:
+    image: mysql:5.7.32
+    container_name: mysql-db
+    restart: always
+    environment:
+        MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD_ROOT}
+        MYSQL_DATABASE: ${MYSQL_DATABASE}
+        MYSQL_PASSWORD:  ${MYSQL_PASSWORD}
+        MYSQL_USER:  ${MYSQL_USER}
+        SERVICE_TAGS: dev
+        SERVICE_NAME: mysql
+    ports:
+        - ${MYSQL_PORT}:3306
+    volumes: 
+      - ./mysql/data:/var/lib/mysql
+    networks:
+      - todolist-net
+
+networks:
+    todolist-net:
+        driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
