@@ -7,6 +7,13 @@ WORKDIR /usr/app
 # Copying only package.json
 COPY package*.json ./
 
+# Install bash to use 'wait-for-it'
+RUN apk update && apk add bash && apk add --no-cache coreutils
+
+# Add 'wait-for-it'
+COPY wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+
 # Install Dependencies
 RUN npm install
 
@@ -16,4 +23,4 @@ COPY . .
 EXPOSE 3030
 
 # Run the API on Nodemon
-CMD ["npm", "run", "prod"]
+# CMD ["npm", "run", "dev"]

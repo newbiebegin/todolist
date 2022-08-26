@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3"
 services:
   
   api:
@@ -10,34 +10,37 @@ services:
    container_name: todolist-api
    environment:
       API_URL: ${API_URL}
-      # MYSQL_DATABASE: ${MYSQL_DATABASE}
-      # MYSQL_PASSWORD:  ${MYSQL_PASSWORD}
-      # MYSQL_USER:  ${MYSQL_USER}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_PASSWORD:  ${MYSQL_PASSWORD}
+      MYSQL_USER:  ${MYSQL_USER}
    networks:
      - todolist-net
    volumes:
     - ./api/src:/usr/app/src
    depends_on:
     - db
-
+   command: ["/wait-for-it.sh", "-t", "120", "db:${MYSQL_PORT}", "--", "npm", "run", "prod"]
+   
   db:
     image: mysql:5.7.37
     container_name: mysql-db
     restart: always
     environment:
-        MYSQL_DATABASE: ${MYSQL_DATABASE}
-        MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD_ROOT}
-        MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-        MYSQL_USER: ${MYSQL_USER}
-        SERVICE_TAGS: dev
-        SERVICE_NAME: mysql
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD_ROOT}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
     ports:
         - ${MYSQL_PORT}:3306
-    volumes: 
-      - ./mysql/data:/var/lib/mysql
+    # volumes: 
+    #   - ./mysql/data:/var/lib/mysql
     networks:
       - todolist-net
-
+   
 networks:
     todolist-net:
         driver: bridge

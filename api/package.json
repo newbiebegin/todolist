@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon -L ./index.js",
+    "dev": "nodemon -L ./index.js $(grep API_SERVER_HOST .env) $(grep API_SERVER_PORT .env)",
     "prod": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -29,6 +29,17 @@ module.exports = (sequelize, Sequelize) => {
             // defaultValue: Sequelize.NOW
         }
     },{
+        indexes:[
+         {
+           unique: false,
+           fields:['email']
+         },
+         {
+            unique: false,
+            fields:['title']
+          }
+        ]
+    },{
         createdAt: 'created_at',
         updatedAt: 'updated_at'
     });
